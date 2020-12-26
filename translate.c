@@ -42,7 +42,9 @@
 
 #include "translate.h"
 
-#define READONLY_PATH	"/readonly/firmware/image/"
+#define READONLY_PATH_FIRMWARE_IMAGE	"/readonly/firmware/image/"
+#define READONLY_PATH_VENDOR_FIRMWARE	"/readonly/vendor/firmware/"
+#define READONLY_PATH_VENDOR_FIRMWAREMNT	"/readonly/vendor/firmware_mnt/"
 #define READWRITE_PATH	"/readwrite/"
 
 #define FIRMWARE_BASE	"/lib/firmware/"
@@ -172,9 +174,13 @@ static int translate_readwrite(const char *file, int flags)
  */
 int translate_open(const char *path, int flags)
 {
-	if (!strncmp(path, READONLY_PATH, strlen(READONLY_PATH)))
-		return translate_readonly(path + strlen(READONLY_PATH));
-	else if (!strncmp(path, READWRITE_PATH, strlen(READWRITE_PATH)))
+	if (!strncmp(path, READONLY_PATH_FIRMWARE_IMAGE, strlen(READONLY_PATH_FIRMWARE_IMAGE)))
+		return translate_readonly(path + strlen(READONLY_PATH_FIRMWARE_IMAGE));
+	else if (!strncmp(path, READONLY_PATH_VENDOR_FIRMWARE, strlen(READONLY_PATH_VENDOR_FIRMWARE)))
+        return translate_readonly(path + strlen(READONLY_PATH_VENDOR_FIRMWARE));
+    else if (!strncmp(path, READONLY_PATH_VENDOR_FIRMWAREMNT, strlen(READONLY_PATH_VENDOR_FIRMWAREMNT)))
+        return translate_readonly(path + strlen(READONLY_PATH_VENDOR_FIRMWAREMNT));
+    else if (!strncmp(path, READWRITE_PATH, strlen(READWRITE_PATH)))
 		return translate_readwrite(path + strlen(READWRITE_PATH), flags);
 
 	fprintf(stderr, "invalid path %s, rejecting\n", path);
